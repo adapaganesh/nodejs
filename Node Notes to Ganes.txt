@@ -1,0 +1,5 @@
+NodeJs: Being polite to Give up Control
+NodeJs runs on a single thread with single even loop that makes calls to the external functions or services. It places callback functions on the eventqueue to wait for the responses and otherwise tries to execute code as quickly as possible. When you have functions that tries to do expensive computations, you might want to consider moving this operations to other services that your node applications can then call remotely.
+NodeJs is not particularly well suited for certain things and one of them is defenitely acting as a computing server.
+NodeJs is far better to suited to more commen network applications such as those with heavy amounts of I/O & requests to the other services. 
+NodeJs is not strict on function prototype checking and this is very dangerous because writing wrong programs by mistake is very much likelyhood and pin poiting that error is very very difficult.

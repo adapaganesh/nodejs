@@ -8,7 +8,9 @@ function load_albums(callback){
 			return;
 		}
 		var only_dirs = [];
-		for(var i = 0; i < files.length; i++){
+
+		//Loop Version that would not work because asychronous calls would complete first and not populate only_dirs 
+/*		for(var i = 0; i < files.length; i++){
 			console.log("file/dir name: " + files[i])
 			fs.stat("albums/" + files[i], function(err,stats){
 				if(!err){
@@ -19,8 +21,28 @@ function load_albums(callback){
 					}
 				}
 			});
-		}
-		callback(null,only_dirs);
+		}*/
+
+		//recursion version that would help to hold the values in only_dirs
+		(function iterator(index){
+			console.log("inside iterator: index = " + index);
+			console.log("files.length: " + files.length);
+			if(index == files.length){
+				console.log("Final traversal: ");
+				callback(null,only_dirs);
+				return;
+			}
+			fs.stat("albums/"+files[index], function(err,stats){
+				if(err){
+					callback(err);
+					return;
+				}
+				if(stats.isDirectory()){
+					only_dirs.push(files[index]);
+				}
+				iterator(index+1);
+			});
+		}) (0);
 	});
 }
 
