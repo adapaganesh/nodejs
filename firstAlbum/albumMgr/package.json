@@ -1,0 +1,11 @@
+{
+  "name": "albumMgr",
+  "version": "1.0.0",
+  "description": "First albumManager nodejs project",
+  "main": "./lib/album.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ganesh Adapa",
+  "license": "ISC"
+}
