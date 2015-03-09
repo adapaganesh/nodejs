@@ -7,11 +7,11 @@ var fs = require('fs'),
 
 function Album(albumPath){
 	this.name = path.basename(albumPath);
-	this.path = albumPath;
+	this.location = albumPath;
 }
 
 Album.prototype.name = null;
-Album.prototype.path = null;
+Album.prototype.location = null;
 Album.prototype._photos = null;
 
 Album.prototype.photos = function (callback){
@@ -22,7 +22,7 @@ Album.prototype.photos = function (callback){
 
 	var self = this;
 
-	fs.readdir(self.path, function(err, files){
+	fs.readdir(self.location, function(err, files){
 		if(err){
 			if(err.errcode == "ENOENT"){
 				callback(noSuchAlbum());
@@ -39,7 +39,7 @@ Album.prototype.photos = function (callback){
 				return;
 			}
 
-			photo = self.path + "/" + files[index];
+			photo = self.location + "/" + files[index];
 			fs.stat(photo, function(err, stats){
 				if(err){
 					callback({error : "file_error", message : JSON.stringify(err)});

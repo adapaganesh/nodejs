@@ -1,11 +1,11 @@
-var http = require('http'),
-	fs = require('fs'),
-	url = require('url'),
-	filereader = require('./fileStreamReader.js'),
-	albums = require('./listAlbums.js');
+var http = require('http');
+var fs = require('fs');
+var url = require('url');
+var filereader = require('./fileStreamReader.js');
+var albums = require('./listAlbums.js');
 
 function handleIncomingRequest(req,res){
-	// parse the query params into an object and get the path
+	// parse the query params into an object and get the location
 	// without them. (true for 2nd param means parse the params).
 	req.parsed_url = url.parse(req.url, true);
 	var core_url = req.parsed_url.pathname;
@@ -15,10 +15,10 @@ function handleIncomingRequest(req,res){
 		servePage(req, res);
 	} 
 	else if (core_url.substring(0, 11) == '/templates/' ) {
-		filereader.fileStreamReader("templates/" + core_url.substring(11), res);
+		filereader.fileReader("templates/" + core_url.substring(11), res);
 	}
 	else if (core_url.substring(0, 9) == '/content/' ) {
-		filereader.fileStreamReader("content/" + core_url.substring(9), res);
+		filereader.fileReader("content/" + core_url.substring(9), res);
 	}
 	else if (core_url == '/albums.json') {
 		handleListAlbums(req, res);
@@ -27,16 +27,56 @@ function handleIncomingRequest(req,res){
 		handleGetAlbumPhotoes(req, res);
 	}
 	else {
-		send_failure(res, 404, invalid_resource());
+		send_failure(res, 404, "Invalid Resource");
 	}
 }
 
 function handleListAlbums(req,res){
-	// parse the query params into an object and get the path
+	// parse the query params into an object and get the location
 	// without them. (true for 2nd param means parse the params).
 	req.parsed_url = url.parse(req.url, true);
 	var core_url = req.parsed_url.pathname;
-	albums.getAlbums();
+	albums.getAlbums(core_url, function(err, albumList){
+        if(err){
+            send_failure(res, 401 , "Error in loading AlbumList");
+        }
+        for(albumInd = 0; albumInd < albumList.length; albumInd++){
+            console.log("albums Name " + albumList[albumInd]);
+        }
+        sendSuccess(res,200,albumList,".json");
+    });
+}
+
+function sendSuccess(res, code, result, ct){
+    var contType = getContentType(ct);
+    var albums = {
+        error : null,
+        albums : result
+        };
+    console.log("result Obj: " + JSON.stringify(albums));
+    res.writeHead(200,{"Content-type" : contType});
+    //res.end(albums );
+     res.end(JSON.stringify(albums));
+}
+
+function getContentType(ext){
+    switch(ext){
+        case '.html' : return "text/html";
+        case '.jpeg' : case '.jpg' : return 'image/jpeg';
+        case '.js' : return	"text/javascript";
+        case '.css' : return "text/css";
+        case '.json' : case '.md' : return "application/json";
+        default : return 'text/html';
+    }
+
+}
+
+function send_failure(res, code, errMsg){
+    var body = errMsg;
+    var content_length = body.length;
+    console.log("error message: " + errMsg);
+    res.writeHead(code, {Content_Lengh : content_length, Content_Type : "text/plain"});
+    res.end(JSON.stringify(body));
 }
 
 function servePage (req, res) {
@@ -45,11 +85,11 @@ function servePage (req, res) {
 
 	// currently only support home!
 	if (page != 'home') {
-		send_failure(res, 404, invalid_resource());
+		send_failure(res, 404, "invalid_page");
 	return;
 	}
 
-	filereader.fileStreamReader('basic.html',res);
+	//fileReader.fileReader('basic.html',res);
 
 	fs.readFile('basic.html',function (err, contents) {
 		if (err) {
@@ -59,10 +99,12 @@ function servePage (req, res) {
 		contents = contents.toString('utf8');
 		// replace page name, and then dump to output.
 		contents = contents.replace( '{{PAGE_NAME}}' , page);
+        //console.log("contents: " + contents);
 		res.writeHead(200, { "Content-Type": "text/html" });
 		res.end(contents);
 	});
 }
 
-var server = http.createserver(handleIncomingRequest);
+var server;
+server = http.createServer(handleIncomingRequest);
 server.listen(3000);

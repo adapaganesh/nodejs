@@ -2,7 +2,7 @@ var fs = require('fs'),
  url = require('url'),
  path = require('path');
 
-exports.filereader = function serveStaticFile(file,res){
+exports.fileReader = function serveStaticFile(file,res){
 	var contents;
 	var rs = fs.createReadStream(file);
 	ct = getContentType(file);
@@ -29,8 +29,8 @@ exports.filereader = function serveStaticFile(file,res){
 	});
 
 	rs.on('end', function(){
-		console.log("Read in the file contents: ");
-		console.log(contents);
+	/*	console.log("Read in the file contents: ");
+		console.log(contents);*/
 		res.writeHead(200, {"Content-type" : ct});
 		res.end(contents);
 	});
@@ -44,8 +44,8 @@ exports.filereader = function serveStaticFile(file,res){
 		res.end(JSON.stringify(result) + "\n");
 	});
 
-	console.log("This will be printed first");
-	console.log("==========================");
+	/*console.log("This will be printed first");
+	console.log("==========================");*/
 }
 
 function getContentType(file){

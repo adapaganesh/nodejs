@@ -1,9 +1,9 @@
-<div id="album_list">
+<div id="albumList">
 <p> There are {{ albums.length }} albums</p>
 <ul id="albums">
 	{{#albums}}
 	<li class="album">
-		<a href='http://localhost:8080/pages/album/ {{name}} '> {{name}} </a>
+		<a href='http://localhost:3000/pages/album/ {{name}} '> {{name}} </a>
 	</li>
 	{{/albums}}
 	{{^albums}}

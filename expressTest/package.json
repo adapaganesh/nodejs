@@ -1,0 +1,14 @@
+{
+  "name": "expressTest",
+  "version": "0.0.1",
+  "description": "practicing express",
+  "main": "test1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adapa Ganesh",
+  "license": "ISC",
+  "dependencies" : {
+	"express" : "3.x"
+	}
+}

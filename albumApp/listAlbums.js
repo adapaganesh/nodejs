@@ -8,7 +8,7 @@ var fs = require('fs'),
 	exports.version = "1.0.0"
 
 	exports.getAlbums = function (path, callback){
-		var albumPath = path + "albums/";
+		var albumPath = "./albums/";
 		fs.readdir(albumPath, function(err, albumList){
 			if(err){
 				callback(err);
@@ -30,7 +30,8 @@ var fs = require('fs'),
 					}
 					if(stats.isDirectory(album)){
 						//console.log("album.Js: album: " + album);
-						albumsOnly.push(Album.createAlbum(album));
+						//albumsOnly.push(Album.createAlbum(album));
+                        albumsOnly.push(albumList[index]);
 					}
 					iterator(index + 1);
 				});

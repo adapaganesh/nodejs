@@ -1,0 +1,13 @@
+{
+  "name": "ExpressDemo",
+  "version": "0.0.1",
+  "description": "Demonistrates using Express & Connect",
+  "main": "index.js",
+  "private": true,
+  "dependencies" : {"express" : "3.x"},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adapa Ganesh",
+  "license": "ISC"
+}
